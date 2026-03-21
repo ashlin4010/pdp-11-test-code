@@ -1,0 +1,22 @@
+       1                                ; This is a test of settings upper and lower bytes of the A to D Status Register
+       2                                ; You need to manually verify the the state of the register
+       3                                
+       4                                .ASECT
+       5 170400                         ADSR = 770400   ; A to D Status Register
+       6                                
+       7 001000                         .=1000
+       8                                LOOP:
+       9                                ; Test lower byte
+      10 001000 012737  000000  170400      MOV #0, @#ADSR      ; Clear A to D Status Register
+      11 001006 112737  000040  170400      MOVB #40, @#ADSR    ; low byte
+      12 001014 112737  000000  170401      MOVB #0,  @#ADSR+1  ; high byte
+      13                                    ; expect 000040
+      14                                
+      15                                ; Test upper byte
+      16 001022 012737  000000  170400      MOV #0, @#ADSR      ; Clear A to D Status Register
+      17 001030 112737  000000  170400      MOVB #0, @#ADSR     ; low byte
+      18 001036 112737  000070  170401      MOVB #70,  @#ADSR+1 ; high byte
+      19                                    ; expect 070000
+      20                                
+      21 001044 000755                      BR LOOP
+      21                                
