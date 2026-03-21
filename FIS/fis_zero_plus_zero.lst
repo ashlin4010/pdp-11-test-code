@@ -1,0 +1,21 @@
+       1                                .ASECT
+       2 004000                         .=4000
+       3                                
+       4                                DATA:
+       5 004000 000000  000000              .WORD 000000,000000
+       6 004004 000000  000000              .WORD 000000,000000
+       7                                
+       8 002000                         .=2000
+       9                                
+      10                                START:
+      11 002000 012700  004000              MOV #DATA, R0	; Load absolute address 2000 into R0
+      12 002004 005020                      CLR (R0)+
+      13 002006 005020                      CLR (R0)+
+      14 002010 005020                      CLR (R0)+
+      15 002012 005020                      CLR (R0)+
+      16 002014 012700  004000              MOV #DATA, R0	; Load absolute address 2000 into R0
+      17                                LOOP:
+      18 002020 075000                      FADD+ R0
+      19                                    ;RESET		     ; Slows the computer down
+      20 002022 000766                      BR START
+      20                                

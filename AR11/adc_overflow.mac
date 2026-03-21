@@ -1,0 +1,32 @@
+; This program uses the AR11 to send the letter "A"
+
+.ASECT
+
+CKSR = 770404   ; Clock Status Register
+CKBR = 770406   ; Clock Buffer Register
+ADSR = 770400   ; A to D Status Register
+ADBR = 770402   ; A to D Buffer Register
+STACK = 4000
+
+.=1000
+MAIN:
+    ; Set up clock
+    MOV #STACK, SP      ; Set the stack pointer
+    MOV #70, @#CKBR     ; Set up counter value 200 clocks (max is 377 = 255, so 70 = 55)
+    MOV #40, @#ADSR     ; Enable Overflow to Start A/D
+    MOV #413, @#CKSR    ; Start clock (Repeated, 100hz, enable)
+
+LOOP:
+    TSTB @#CKSR         ; Check for overflow
+    BPL LOOP            ; Branch if plus (bit 7 is 0)
+
+BELL:
+    TSTB @#177564       ; Test lower byte of TTY reg
+    BPL BELL            ; Branch if plus (bit 7 is 0)
+    MOV #102, @#177566  ; Write "B"
+
+CONV:
+    TSTB @#ADSR         ; Test A/D Done (bit 7)
+    BPL CONV            ; Branch if plus (A/D not Done)
+    MOV @#ADBR, R0      ; Read value
+    BR LOOP

@@ -1,0 +1,19 @@
+.ASECT
+.=1000
+
+STACK = 4000
+
+main:
+    mov #STACK, sp ; Set stack pointer
+    mov #ISR, @#64 ; Copy the ISR address to the interrupt vector word
+    mov #200, @#66 ; Set status word priority 4
+
+    ; Assume DL11 is ready to send
+    movb #101, @#177566 ; Write "A"
+    mov #100, @#177564  ; Enable INTERRUPT bit 6
+
+    br .           ; Endless loop
+
+ISR:
+    movb    #100, @#177566  ; Send "@"
+    rti                     ; return from interrupt

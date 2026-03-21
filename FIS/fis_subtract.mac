@@ -1,0 +1,32 @@
+AH = 177520 ;
+AL = 017552
+; -
+BH = 135352 ;
+BL = 051107
+
+.ASECT
+.=4000
+
+DATA:
+    .WORD 000000,000000     ; Load 0 to arg B
+    .WORD 000000,000000     ; Load 0 to arg A
+
+.=2000
+
+START:
+    MOV #DATA, R0     ; Load absolute address data into R0
+    MOV #BH, (R0)+    ; Load High B
+    MOV #BL, (R0)+    ; Load Low B
+
+    MOV #AH, (R0)+    ; Load High A
+    MOV #AL, (R0)+    ; Load Low A
+
+    MOV #DATA, R0     ; Set stack pointer
+    FSUB R0           ; -
+
+    BR START
+
+LOOP:
+    MOV @#DATA+4, R0
+    RESET             ; Slows the computer down
+    BR LOOP

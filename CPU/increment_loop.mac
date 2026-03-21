@@ -1,0 +1,6 @@
+.ASECT
+.=1000
+LOOP:
+    CLR R0
+    INC R0
+    BR LOOP

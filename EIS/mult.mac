@@ -1,0 +1,5 @@
+.ASECT
+.=1000
+    MOV #0, R0
+    MUL #1, R0
+    HLT

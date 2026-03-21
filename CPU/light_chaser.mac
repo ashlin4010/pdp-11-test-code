@@ -1,0 +1,7 @@
+.ASECT
+.=1000
+    MOV #1, R0
+LOOP:
+    ROL R0
+    RESET
+    BR LOOP

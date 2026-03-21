@@ -1,0 +1,38 @@
+       1                                ; This program uses the AR11 to send the letter "A"
+       2                                ; every N interrupts
+       3                                
+       4                                .ASECT
+       5                                
+       6 170404                         CKSR = 770404   ; Clock Status Register
+       7 170406                         CKBR = 770406   ; Clock Buffer Register
+       8 004000                         STACK = 4000
+       9                                
+      10                                ; Overflow interrupt
+      11 000344                         .=344
+      12 000344 001022                  .WORD OFSERV
+      13 000346 000300                  .WORD 300
+      14                                
+      15 001000                         .=1000
+      16                                MAIN:
+      17                                    ; Set up clock
+      18 001000 012706  004000              MOV #STACK, SP  ; Set the stack pointer
+      19 001004 012737  000070  170406      MOV #70, @#CKBR  ; Set up counter value 200 clocks (max is 377 = 255, so 70 = 55)
+      20 001012 012737  000513  170404      MOV #513, @#CKSR ; Start clock (Repeated,  overflow intr, 100hz, enable)
+      21 001020 000777                      BR .    ; Endless loop
+      22                                
+      23                                
+      24                                OFSERV: ; Overflow service
+      25 001022 010046                      MOV R0, -(SP)
+      26 001024 004767  001034'             JSR PC, PRINT
+      27 001030 012600                      MOV     (SP)+, R0
+      28 001032 000002                      RTI ; RETURN FROM INTERRUPT
+      29                                
+      30                                
+      31                                PRINT:
+      32 001034 105737  177564              TSTB @#177564
+      33 001040 100375                      BPL PRINT
+      34 001042 112737  000101  177566      MOVB #101, @#177566
+      35 001050 000207                      RTS PC ; Return to caller
+      36                                
+      37                                
+      37                                

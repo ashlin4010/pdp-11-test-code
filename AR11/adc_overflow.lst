@@ -1,0 +1,32 @@
+       1                                ; This program uses the AR11 to send the letter "A"
+       2                                
+       3                                .ASECT
+       4                                
+       5 170404                         CKSR = 770404   ; Clock Status Register
+       6 170406                         CKBR = 770406   ; Clock Buffer Register
+       7 170400                         ADSR = 770400   ; A to D Status Register
+       8 170402                         ADBR = 770402   ; A to D Buffer Register
+       9 004000                         STACK = 4000
+      10                                
+      11 001000                         .=1000
+      12                                MAIN:
+      13                                    ; Set up clock
+      14 001000 012706  004000              MOV #STACK, SP      ; Set the stack pointer
+      15 001004 012737  000070  170406      MOV #70, @#CKBR     ; Set up counter value 200 clocks (max is 377 = 255, so 70 = 55)
+      16 001012 012737  000040  170400      MOV #40, @#ADSR     ; Enable Overflow to Start A/D
+      17 001020 012737  000413  170404      MOV #413, @#CKSR    ; Start clock (Repeated, 100hz, enable)
+      18                                
+      19                                LOOP:
+      20 001026 105737  170404              TSTB @#CKSR         ; Check for overflow
+      21 001032 100375                      BPL LOOP            ; Branch if plus (bit 7 is 0)
+      22                                
+      23                                BELL:
+      24 001034 105737  177564              TSTB @#177564       ; Test lower byte of TTY reg
+      25 001040 100375                      BPL BELL            ; Branch if plus (bit 7 is 0)
+      26 001042 012737  000102  177566      MOV #102, @#177566  ; Write "B"
+      27                                
+      28                                CONV:
+      29 001050 105737  170400              TSTB @#ADSR         ; Test A/D Done (bit 7)
+      30 001054 100375                      BPL CONV            ; Branch if plus (A/D not Done)
+      31 001056 013700  170402              MOV @#ADBR, R0      ; Read value
+      31 001062 000761                      BR LOOP

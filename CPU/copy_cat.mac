@@ -1,0 +1,6 @@
+.ASECT
+.=1000
+LOOP:
+    MOV @#777570, R0
+    RESET
+    BR LOOP

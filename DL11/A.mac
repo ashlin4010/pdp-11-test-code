@@ -1,0 +1,12 @@
+; This is a basic program to print
+; the letter "A" to the console in a loop
+; This program has been made as simple as possable
+
+.ASECT
+.=2000
+
+wait:
+    tstb    @#177564
+    bpl     wait
+    movb    #101, @#177566
+    br      wait

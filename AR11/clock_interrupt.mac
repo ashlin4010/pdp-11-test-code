@@ -1,0 +1,33 @@
+; This program uses the AR11 to send the letter "A"
+
+.ASECT
+
+CKSR = 770404   ; Clock Status Register
+CKBR = 770406   ; Clock Buffer Register
+STACK = 4000
+
+; Overflow interrupt
+.=344
+.WORD OFSERV
+.WORD 300
+
+.=1000
+MAIN:
+    ; Set up clock
+    MOV #STACK, SP      ; Set the stack pointer
+    MOV #100, @#177564  ; Enable INTERRUPT bit 6
+    MOV #70, @#CKBR     ; Set up counter value 200 clocks (max is 377 = 255, so 70 = 55)
+    MOV #513, @#CKSR    ; Start clock (Repeated,  overflow intr, 100hz, enable)
+    BR .                ; Endless loop
+
+OFSERV:                 ; Overflow service
+    MOV R0, -(SP)
+    JSR PC, PRINT
+    MOV     (SP)+, R0
+    RTI                 ; RETURN FROM INTERRUPT
+
+PRINT:
+    TSTB @#177564
+    BPL PRINT
+    MOVB #101, @#177566
+    RTS PC              ; Return to caller
