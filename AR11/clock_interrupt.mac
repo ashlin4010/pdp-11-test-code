@@ -1,4 +1,5 @@
-; This program uses the AR11 to send the letter "A"
+; This program uses the AR11 to send the letter "B" at a fixed time
+; It will then also read the A/D after having started the on the timer overflow
 
 .ASECT
 

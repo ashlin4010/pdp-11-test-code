@@ -11,12 +11,13 @@
       11 001006 112737  000040  170400      MOVB #40, @#ADSR    ; low byte
       12 001014 112737  000000  170401      MOVB #0,  @#ADSR+1  ; high byte
       13                                    ; expect 000040
-      14                                
-      15                                ; Test upper byte
-      16 001022 012737  000000  170400      MOV #0, @#ADSR      ; Clear A to D Status Register
-      17 001030 112737  000000  170400      MOVB #0, @#ADSR     ; low byte
-      18 001036 112737  000070  170401      MOVB #70,  @#ADSR+1 ; high byte
-      19                                    ; expect 070000
-      20                                
-      21 001044 000755                      BR LOOP
+      14 001022 000766                      BR LOOP
+      15                                
+      16                                ; Test upper byte
+      17 001024 012737  000000  170400      MOV #0, @#ADSR      ; Clear A to D Status Register
+      18 001032 112737  000000  170400      MOVB #0, @#ADSR     ; low byte
+      19 001040 112737  000007  170401      MOVB #7,  @#ADSR+1 ; high byte
+      20                                    ; expect 070000
       21                                
+      22 001046 000754                      BR LOOP
+      22                                

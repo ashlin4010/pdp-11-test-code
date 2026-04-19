@@ -11,11 +11,12 @@ LOOP:
     MOVB #40, @#ADSR    ; low byte
     MOVB #0,  @#ADSR+1  ; high byte
     ; expect 000040
+    BR LOOP
 
 ; Test upper byte
     MOV #0, @#ADSR      ; Clear A to D Status Register
     MOVB #0, @#ADSR     ; low byte
-    MOVB #70,  @#ADSR+1 ; high byte
+    MOVB #7,  @#ADSR+1  ; high byte
     ; expect 070000
 
     BR LOOP
